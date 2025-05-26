@@ -3,6 +3,39 @@ import React from 'react';
 import { Shield, Award, Users, Clock } from 'lucide-react';
 
 const About = () => {
+  const founders = [
+    {
+      name: 'Rofikul Huda',
+      role: 'Founder, Developer',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
+      description: 'Visioner utama MicroStore dengan pengalaman 8+ tahun di bidang embedded systems dan IoT development.'
+    },
+    {
+      name: 'Saputra Pramahkota Hati',
+      role: 'Co-Founder',
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
+      description: 'Ahli strategi bisnis yang membantu mengembangkan ekosistem MicroStore dengan network yang luas.'
+    },
+    {
+      name: 'Rizky Agil Wibowo',
+      role: 'Administrator',
+      image: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=300&h=300&fit=crop&crop=face',
+      description: 'Mengelola operasional harian dan memastikan kelancaran sistem administrasi perusahaan.'
+    },
+    {
+      name: 'Bagus Setiawan',
+      role: 'Editor, Designer',
+      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop&crop=face',
+      description: 'Kreator konten dan desainer yang menciptakan pengalaman visual yang menarik untuk pelanggan.'
+    },
+    {
+      name: 'Adira Putra Raihan',
+      role: 'Supplier',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
+      description: 'Menjalin hubungan dengan supplier global untuk memastikan kualitas dan ketersediaan produk.'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -54,8 +87,43 @@ const About = () => {
         </div>
       </section>
 
-      {/* Values Section */}
+      {/* Founders Section */}
       <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Tim Pendiri
+            </h2>
+            <p className="text-xl text-gray-600">
+              Orang-orang hebat di balik kesuksesan MicroStore
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+            {founders.map((founder, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
+                <img
+                  src={founder.image}
+                  alt={founder.name}
+                  className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {founder.name}
+                </h3>
+                <p className="text-blue-600 font-medium mb-3">
+                  {founder.role}
+                </p>
+                <p className="text-gray-600 text-sm">
+                  {founder.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">

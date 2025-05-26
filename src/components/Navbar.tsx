@@ -1,18 +1,22 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Search } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const { cartItems } = useCart();
   const location = useLocation();
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Scroll to top when route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location]);
 
   const navItems = [
     { name: 'Beranda', path: '/' },
@@ -39,7 +43,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
                   isActive(item.path)
                     ? 'text-blue-600 bg-blue-50'
                     : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
@@ -48,20 +52,6 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-          </div>
-
-          {/* Search Bar */}
-          <div className="hidden md:flex items-center max-w-md flex-1 mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <input
-                type="text"
-                placeholder="Cari produk..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
           </div>
 
           {/* Cart Icon */}
@@ -103,19 +93,6 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            {/* Mobile Search */}
-            <div className="mt-4 px-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <input
-                  type="text"
-                  placeholder="Cari produk..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
           </div>
         )}
       </div>

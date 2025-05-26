@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { products, categories } from '../data/products';
 import ProductCard from '../components/ProductCard';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, SortAsc } from 'lucide-react';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
@@ -55,28 +55,28 @@ const Products = () => {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Compact Filters */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
-            <div className="relative">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <input
                 type="text"
                 placeholder="Cari produk..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
             {/* Category Filter */}
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <div className="relative min-w-48">
+              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 z-10" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                className="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
@@ -87,15 +87,16 @@ const Products = () => {
             </div>
 
             {/* Sort */}
-            <div>
+            <div className="relative min-w-48">
+              <SortAsc className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 z-10" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                className="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
               >
-                <option value="name">Urutkan: Nama A-Z</option>
-                <option value="price-low">Urutkan: Harga Terendah</option>
-                <option value="price-high">Urutkan: Harga Tertinggi</option>
+                <option value="name">Nama A-Z</option>
+                <option value="price-low">Harga Terendah</option>
+                <option value="price-high">Harga Tertinggi</option>
               </select>
             </div>
           </div>
