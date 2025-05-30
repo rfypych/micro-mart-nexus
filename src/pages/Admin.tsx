@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Lock, Eye, EyeOff, Plus, Edit, Trash2, Upload, LogOut } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
@@ -25,6 +26,7 @@ const Admin = () => {
     price: 0,
     image: '',
     category: 'ESP Series',
+    customCategory: '',
     description: '',
     stock: 0,
     featured: false,
@@ -32,13 +34,13 @@ const Admin = () => {
       chipset: '',
       memory: '',
       storage: '',
-      connectivity: [] as string[],
+      connectivity: '',
       voltage: '',
       pins: 0,
       dimensions: '',
       weight: ''
     },
-    applications: [] as string[]
+    applications: ''
   });
 
   const defaultImage = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop';
@@ -56,11 +58,27 @@ const Admin = () => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Determine final category
+    const finalCategory = formData.category === 'custom' ? formData.customCategory : formData.category;
+    
+    // Process connectivity - split by comma if it's a string
+    const connectivityArray = formData.specifications.connectivity 
+      ? formData.specifications.connectivity.split(',').map(item => item.trim()).filter(item => item !== '')
+      : [];
+
+    // Process applications - split by line breaks
+    const applicationsArray = formData.applications
+      ? formData.applications.split('\n').map(item => item.trim()).filter(item => item !== '')
+      : [];
+
     // Clean up the specifications - remove empty values
     const cleanedSpecifications = Object.fromEntries(
-      Object.entries(formData.specifications).filter(([key, value]) => {
+      Object.entries({
+        ...formData.specifications,
+        connectivity: connectivityArray
+      }).filter(([key, value]) => {
         if (Array.isArray(value)) {
-          return value.length > 0 && value.some(item => item.trim() !== '');
+          return value.length > 0;
         }
         return value !== '' && value !== 0;
       })
@@ -68,8 +86,9 @@ const Admin = () => {
 
     const productData = {
       ...formData,
+      category: finalCategory,
       image: formData.image || defaultImage,
-      applications: formData.applications.filter(app => app.trim() !== ''),
+      applications: applicationsArray,
       specifications: cleanedSpecifications
     };
 
@@ -88,6 +107,7 @@ const Admin = () => {
       price: 0,
       image: '',
       category: 'ESP Series',
+      customCategory: '',
       description: '',
       stock: 0,
       featured: false,
@@ -95,24 +115,27 @@ const Admin = () => {
         chipset: '',
         memory: '',
         storage: '',
-        connectivity: [],
+        connectivity: '',
         voltage: '',
         pins: 0,
         dimensions: '',
         weight: ''
       },
-      applications: []
+      applications: ''
     });
     setEditingProduct(null);
     setShowForm(false);
   };
 
   const handleEdit = (product: Product) => {
+    const isCustomCategory = !['ESP Series', 'Arduino', 'Raspberry Pi', 'Sensor', 'Aksesoris'].includes(product.category);
+    
     setFormData({
       name: product.name,
       price: product.price,
       image: product.image,
-      category: product.category,
+      category: isCustomCategory ? 'custom' : product.category,
+      customCategory: isCustomCategory ? product.category : '',
       description: product.description,
       stock: product.stock,
       featured: product.featured,
@@ -120,13 +143,15 @@ const Admin = () => {
         chipset: product.specifications.chipset || '',
         memory: product.specifications.memory || '',
         storage: product.specifications.storage || '',
-        connectivity: product.specifications.connectivity || [],
+        connectivity: Array.isArray(product.specifications.connectivity) 
+          ? product.specifications.connectivity.join(', ') 
+          : product.specifications.connectivity || '',
         voltage: product.specifications.voltage || '',
         pins: product.specifications.pins || 0,
         dimensions: product.specifications.dimensions || '',
         weight: product.specifications.weight || ''
       },
-      applications: product.applications
+      applications: product.applications.join('\n')
     });
     setEditingProduct(product);
     setShowForm(true);
@@ -268,8 +293,23 @@ const Admin = () => {
                     <option value="Raspberry Pi">Raspberry Pi</option>
                     <option value="Sensor">Sensor</option>
                     <option value="Aksesoris">Aksesoris</option>
+                    <option value="custom">Kategori Custom</option>
                   </select>
                 </div>
+
+                {formData.category === 'custom' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nama Kategori Custom
+                    </label>
+                    <Input
+                      value={formData.customCategory}
+                      onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
+                      placeholder="Masukkan nama kategori"
+                      required={formData.category === 'custom'}
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -314,6 +354,139 @@ const Admin = () => {
                     rows={3}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
+                  />
+                </div>
+
+                {/* Specifications Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Spesifikasi Teknis</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Chipset
+                      </label>
+                      <Input
+                        value={formData.specifications.chipset}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, chipset: e.target.value }
+                        })}
+                        placeholder="ESP32-WROOM-32"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Memory
+                      </label>
+                      <Input
+                        value={formData.specifications.memory}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, memory: e.target.value }
+                        })}
+                        placeholder="520KB SRAM"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Storage
+                      </label>
+                      <Input
+                        value={formData.specifications.storage}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, storage: e.target.value }
+                        })}
+                        placeholder="4MB Flash"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Connectivity (pisahkan dengan koma)
+                      </label>
+                      <Input
+                        value={formData.specifications.connectivity}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, connectivity: e.target.value }
+                        })}
+                        placeholder="WiFi, Bluetooth, Ethernet"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Voltage
+                      </label>
+                      <Input
+                        value={formData.specifications.voltage}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, voltage: e.target.value }
+                        })}
+                        placeholder="3.3V"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Pins
+                      </label>
+                      <Input
+                        type="number"
+                        value={formData.specifications.pins}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, pins: parseInt(e.target.value) || 0 }
+                        })}
+                        placeholder="30"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Dimensions
+                      </label>
+                      <Input
+                        value={formData.specifications.dimensions}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, dimensions: e.target.value }
+                        })}
+                        placeholder="55 x 28 x 13 mm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Weight
+                      </label>
+                      <Input
+                        value={formData.specifications.weight}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          specifications: { ...formData.specifications, weight: e.target.value }
+                        })}
+                        placeholder="10g"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Applications Section */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Aplikasi & Kegunaan (satu per baris)
+                  </label>
+                  <textarea
+                    value={formData.applications}
+                    onChange={(e) => setFormData({ ...formData, applications: e.target.value })}
+                    rows={5}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Proyek IoT (Internet of Things)&#10;Smart Home Automation&#10;Monitoring Sensor Wireless"
                   />
                 </div>
 
