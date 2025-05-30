@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Zap } from 'lucide-react';
+import { ShoppingCart, Menu, X, Cpu } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
@@ -23,6 +23,7 @@ const Navbar = () => {
     { name: 'Produk', path: '/produk' },
     { name: 'Tentang Kami', path: '/tentang' },
     { name: 'Kontak', path: '/kontak' },
+    { name: 'Admin', path: '/admin' },
   ];
 
   return (
@@ -32,17 +33,13 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <div className="bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 text-white px-4 py-3 rounded-xl font-bold text-lg shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
-                <div className="flex items-center space-x-1">
-                  <span>M</span>
-                  <Zap className="h-4 w-4 text-yellow-300" />
-                  <span>C</span>
-                </div>
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                <Cpu className="h-6 w-6" />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-gray-900">
                 MicroStore
               </span>
               <span className="text-xs text-gray-500 -mt-1">Electronics Hub</span>
@@ -93,7 +90,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100 bg-white/95 backdrop-blur-sm">
+          <div className="md:hidden py-4 border-t border-gray-100 bg-white/95 backdrop-blur-sm animate-slide-in-right">
             {navItems.map((item) => (
               <Link
                 key={item.name}

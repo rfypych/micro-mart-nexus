@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react';
@@ -16,7 +15,7 @@ const Cart = () => {
   };
 
   const handleWhatsAppOrder = () => {
-    const whatsappNumber = '6281234567890'; // This should be configurable
+    const whatsappNumber = '6287850629480'; // Updated number
     const orderDetails = cartItems.map(item => 
       `${item.name} x${item.quantity} - ${formatPrice(item.price * item.quantity)}`
     ).join('\n');
@@ -29,7 +28,7 @@ const Cart = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 py-8 animate-fade-in">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-16">
             <ShoppingBag className="h-24 w-24 text-gray-300 mx-auto mb-6" />
@@ -51,7 +50,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 animate-fade-in">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">

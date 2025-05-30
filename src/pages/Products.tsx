@@ -1,32 +1,25 @@
 
-import React, { useState, useMemo } from 'react';
-import { products, categories } from '../data/products';
+import React, { useState } from 'react';
+import { Search, Filter, Grid, List } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { Search, Filter, SortAsc } from 'lucide-react';
+import { categories } from '../data/products';
+import { useAdmin } from '../context/AdminContext';
 
 const Products = () => {
+  const { products } = useAdmin();
   const [selectedCategory, setSelectedCategory] = useState('Semua');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('name');
 
-  const filteredProducts = useMemo(() => {
-    let filtered = products;
-
-    // Filter by category
-    if (selectedCategory !== 'Semua') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
-    }
-
-    // Filter by search query
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Sort products
-    filtered.sort((a, b) => {
+  const filteredProducts = products
+    .filter(product => {
+      const matchesCategory = selectedCategory === 'Semua' || product.category === selectedCategory;
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
           return a.price - b.price;
@@ -39,65 +32,75 @@ const Products = () => {
       }
     });
 
-    return filtered;
-  }, [selectedCategory, searchQuery, sortBy]);
-
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Katalog Produk
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Produk Kami</h1>
           <p className="text-xl text-gray-600">
-            Temukan mikrokontroler dan komponen elektronik yang Anda butuhkan
+            Temukan berbagai mikrokontroler dan komponen elektronik berkualitas tinggi
           </p>
         </div>
 
-        {/* Compact Filters */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder="Cari produk..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+        {/* Search and Filters */}
+        <div className="mb-8 space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Cari produk..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
 
+          {/* Filters Row */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             {/* Category Filter */}
-            <div className="relative min-w-48">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 z-10" />
+            <div className="flex items-center space-x-2">
+              <Filter className="h-5 w-5 text-gray-400" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                className="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
+                  <option key={category} value={category}>{category}</option>
                 ))}
               </select>
             </div>
 
-            {/* Sort */}
-            <div className="relative min-w-48">
-              <SortAsc className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 z-10" />
+            {/* Sort and View Controls */}
+            <div className="flex items-center space-x-4">
+              {/* Sort Dropdown */}
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                className="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="name">Nama A-Z</option>
-                <option value="price-low">Harga Terendah</option>
-                <option value="price-high">Harga Tertinggi</option>
+                <option value="name">Urutkan: Nama A-Z</option>
+                <option value="price-low">Urutkan: Harga Terendah</option>
+                <option value="price-high">Urutkan: Harga Tertinggi</option>
               </select>
+
+              {/* View Mode Toggle */}
+              <div className="flex border border-gray-200 rounded-lg">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}
+                >
+                  <Grid className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}
+                >
+                  <List className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -110,16 +113,29 @@ const Products = () => {
         </div>
 
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              Tidak ada produk yang sesuai dengan kriteria pencarian
+        <div className={`grid gap-8 ${
+          viewMode === 'grid' 
+            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+            : 'grid-cols-1'
+        }`}>
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="hover-scale">
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+
+        {/* No Results */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-16">
+            <div className="text-gray-400 mb-4">
+              <Search className="h-16 w-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Tidak ada produk ditemukan
+            </h3>
+            <p className="text-gray-600">
+              Coba ubah filter pencarian atau kata kunci Anda
             </p>
           </div>
         )}
