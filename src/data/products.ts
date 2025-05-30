@@ -54,7 +54,7 @@ export const products: Product[] = [
     id: '2',
     name: 'ESP8266 NodeMCU',
     price: 65000,
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=300&fit=crop',
     category: 'ESP Series',
     description: 'Mikrokontroler ESP8266 dengan built-in WiFi module. Pilihan ekonomis untuk proyek IoT sederhana.',
     specifications: {
@@ -82,7 +82,7 @@ export const products: Product[] = [
     id: '3',
     name: 'Arduino Uno R3',
     price: 120000,
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
     category: 'Arduino',
     description: 'Mikrokontroler Arduino Uno R3 original dengan ATmega328P. Board paling populer untuk pembelajaran elektronika.',
     specifications: {
@@ -110,7 +110,7 @@ export const products: Product[] = [
     id: '4',
     name: 'Raspberry Pi 4 Model B 4GB',
     price: 950000,
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
     category: 'Raspberry Pi',
     description: 'Single Board Computer Raspberry Pi 4 dengan RAM 4GB. Komputer mini yang powerful untuk berbagai aplikasi.',
     specifications: {
@@ -138,7 +138,7 @@ export const products: Product[] = [
     id: '5',
     name: 'Arduino Nano',
     price: 75000,
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
     category: 'Arduino',
     description: 'Arduino Nano compact dengan ATmega328P. Ukuran kecil dengan fungsionalitas lengkap.',
     specifications: {
