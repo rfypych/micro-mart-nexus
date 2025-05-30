@@ -1,11 +1,11 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Shield, Truck, Headphones, Zap, Star, TrendingUp } from 'lucide-react';
-import { products } from '../data/products';
+import { useAdmin } from '../context/AdminContext';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
+  const { products } = useAdmin();
   const featuredProducts = products.filter(product => product.featured);
 
   return (
