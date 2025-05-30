@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Lock, Eye, EyeOff, Plus, Edit, Trash2, Upload, LogOut } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
@@ -56,14 +55,22 @@ const Admin = () => {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clean up the specifications - remove empty values
+    const cleanedSpecifications = Object.fromEntries(
+      Object.entries(formData.specifications).filter(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value.length > 0 && value.some(item => item.trim() !== '');
+        }
+        return value !== '' && value !== 0;
+      })
+    );
+
     const productData = {
       ...formData,
       image: formData.image || defaultImage,
       applications: formData.applications.filter(app => app.trim() !== ''),
-      specifications: {
-        ...formData.specifications,
-        connectivity: formData.specifications.connectivity.filter(conn => conn.trim() !== '')
-      }
+      specifications: cleanedSpecifications
     };
 
     if (editingProduct) {
@@ -109,7 +116,16 @@ const Admin = () => {
       description: product.description,
       stock: product.stock,
       featured: product.featured,
-      specifications: product.specifications,
+      specifications: {
+        chipset: product.specifications.chipset || '',
+        memory: product.specifications.memory || '',
+        storage: product.specifications.storage || '',
+        connectivity: product.specifications.connectivity || [],
+        voltage: product.specifications.voltage || '',
+        pins: product.specifications.pins || 0,
+        dimensions: product.specifications.dimensions || '',
+        weight: product.specifications.weight || ''
+      },
       applications: product.applications
     });
     setEditingProduct(product);
